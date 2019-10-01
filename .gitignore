@@ -1,0 +1,7 @@
+*.o
+*/
+*.py
+*.sh
+server
+client
+*.zip
