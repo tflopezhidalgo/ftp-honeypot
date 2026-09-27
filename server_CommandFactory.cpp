@@ -15,11 +15,11 @@
 #define QUIT_CMD "QUIT"
 #define SPACE_DEL ' '
 
-CommandFactory::CommandFactory(ProtectedFS* fs, ProtectedResponses* responses,
+CommandFactory::CommandFactory(ProtectedFS* fs, ConfigLoader* config,
                                bool* dead)
-    : logger(responses->get("user"), responses->get("password")) {
+    : authenticator(config->get("user"), config->get("password")) {
     this->fs = fs;
-    this->responses = responses;
+    this->config = config;
     this->dead = dead;
 }
 
@@ -37,27 +37,27 @@ Command* CommandFactory::create(std::string str) {
         arg.pop_back();
 
     if (cmd == USER_CMD) {
-        this->logger.tryUser(arg);
-        return new UserCommand(fs, responses, &logger);
+        this->authenticator.checkUser(arg);
+        return new UserCommand(fs, config, &authenticator);
     } else if (cmd == PASS_CMD) {
-        this->logger.tryPass(arg);
-        return new PassCommand(fs, responses, &logger);
+        this->authenticator.checkPassword(arg);
+        return new PassCommand(fs, config, &authenticator);
     } else if (cmd == SYST_CMD)
-        return new SystCommand(fs, responses, &logger);
+        return new SystCommand(fs, config, &authenticator);
     else if (cmd == LIST_CMD)
-        return new ListCommand(fs, responses, &logger);
+        return new ListCommand(fs, config, &authenticator);
     else if (cmd == HELP_CMD)
-        return new HelpCommand(fs, responses, &logger);
+        return new HelpCommand(fs, config, &authenticator);
     else if (cmd == PWD_CMD)
-        return new PWDCommand(fs, responses, &logger);
+        return new PWDCommand(fs, config, &authenticator);
     else if (cmd == MKD_CMD)
-        return new MKDCommand(fs, responses, &logger, arg);
+        return new MKDCommand(fs, config, &authenticator, arg);
     else if (cmd == RMD_CMD)
-        return new RMDCommand(fs, responses, &logger, arg);
+        return new RMDCommand(fs, config, &authenticator, arg);
     else if (cmd == QUIT_CMD) {
         *dead = true;
-        return new QuitCommand(fs, responses, &logger);
+        return new QuitCommand(fs, config, &authenticator);
     } else {
-        return new InvalidCommand(fs, responses, &logger);
+        return new InvalidCommand(fs, config, &authenticator);
     }
 }

@@ -2,10 +2,10 @@
 #define LOGINFO_H
 
 #include "server_ProtectedFS.h"
-#include "server_ProtectedResponses.h"
+#include "server_ConfigLoader.h"
 #include <string>
 
-class LogInfo {
+class Authenticator {
   private:
     bool passOK;
     bool userOK;
@@ -13,9 +13,9 @@ class LogInfo {
     std::string pass;
 
   public:
-    LogInfo(std::string user, std::string pass);
-    void tryUser(std::string user);
-    void tryPass(std::string pass);
+    Authenticator(std::string user, std::string pass);
+    void checkUser(std::string user);
+    void checkPassword(std::string pass);
     bool logged();
 };
 

@@ -3,7 +3,7 @@
 
 #include "server_AcceptorSocket.h"
 #include "server_ProtectedFS.h"
-#include "server_ProtectedResponses.h"
+#include "server_ConfigLoader.h"
 #include "server_Talker.h"
 #include "server_Thread.h"
 #include <string>
@@ -14,8 +14,10 @@ class ClientManager : public Thread {
     AcceptorSocket acceptor;
     std::vector<Talker*> talkers;
     ProtectedFS filesystem;
-    ProtectedResponses responses;
+    ConfigLoader config;
     bool alive;
+
+    void dropStaleConnections();
 
   public:
     ClientManager(std::string service, std::string config);

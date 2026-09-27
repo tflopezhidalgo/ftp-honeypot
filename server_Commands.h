@@ -2,48 +2,48 @@
 #define SERVER_COMMANDS_H
 
 #include "server_Command.h"
-#include "server_LogInfo.h"
+#include "server_Authenticator.h"
 #include "server_ProtectedFS.h"
-#include "server_ProtectedResponses.h"
+#include "server_ConfigLoader.h"
 
 class UserCommand : public Command {
   public:
-    UserCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    UserCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~UserCommand();
 };
 
 class PassCommand : public Command {
   public:
-    PassCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    PassCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~PassCommand();
 };
 
 class SystCommand : public Command {
   public:
-    SystCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    SystCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~SystCommand();
 };
 
 class ListCommand : public Command {
   public:
-    ListCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    ListCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~ListCommand();
 };
 
 class HelpCommand : public Command {
   public:
-    HelpCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    HelpCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~HelpCommand();
 };
 
 class PWDCommand : public Command {
   public:
-    PWDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    PWDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~PWDCommand();
 };
@@ -53,7 +53,7 @@ class MKDCommand : public Command {
     std::string dir;
 
   public:
-    MKDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l,
+    MKDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l,
                std::string arg);
     std::string execute();
     ~MKDCommand();
@@ -64,7 +64,7 @@ class RMDCommand : public Command {
     std::string dir;
 
   public:
-    RMDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l,
+    RMDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l,
                std::string arg);
     std::string execute();
     ~RMDCommand();
@@ -72,14 +72,14 @@ class RMDCommand : public Command {
 
 class InvalidCommand : public Command {
   public:
-    InvalidCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    InvalidCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~InvalidCommand();
 };
 
 class QuitCommand : public Command {
   public:
-    QuitCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l);
+    QuitCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l);
     std::string execute();
     ~QuitCommand();
 };

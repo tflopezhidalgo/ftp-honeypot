@@ -5,16 +5,18 @@
 #include "server_CommandFactory.h"
 #include "server_Thread.h"
 
+// Conexion 1 a 1 con un cliente.
+
 class Talker : public Thread {
   private:
     bool dead;
     Socket skt;
     CommandFactory factory;
     ProtectedFS* filesystem;
-    ProtectedResponses* responses;
+    ConfigLoader* responses;
 
   public:
-    Talker(int skt, ProtectedFS* filesystem, ProtectedResponses* responses);
+    Talker(int skt, ProtectedFS* filesystem, ConfigLoader* responses);
     void run();
     void stop();
     bool is_dead();
