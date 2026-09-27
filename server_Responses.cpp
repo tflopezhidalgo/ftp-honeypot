@@ -1,4 +1,4 @@
-#include "server_ProtectedResponses.h"
+#include "server_Responses.h"
 #include <fstream>
 #include <string>
 
@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ProtectedResponses::ProtectedResponses(std::string filename) {
+Responses::Responses(std::string filename) {
 
     fstream config_f(filename);
     string k, v;
@@ -19,12 +19,12 @@ ProtectedResponses::ProtectedResponses(std::string filename) {
     config_f.close();
 }
 
-string ProtectedResponses::get(string k) { 
+string Responses::get(string k) { 
     return this->responses[k]; 
 }
 
-void ProtectedResponses::set(string k, string v) {
+void Responses::set(string k, string v) {
     this->responses[k] = v;
 }
 
-ProtectedResponses::~ProtectedResponses() {}
+Responses::~Responses() {}

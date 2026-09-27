@@ -11,10 +11,10 @@ class Talker : public Thread {
     Socket skt;
     CommandFactory factory;
     ProtectedFS* filesystem;
-    ProtectedResponses* responses;
+    Responses* responses;
 
   public:
-    Talker(int skt, ProtectedFS* filesystem, ProtectedResponses* responses);
+    Talker(int skt, ProtectedFS* filesystem, Responses* responses);
     void run();
     void stop();
     bool is_dead();

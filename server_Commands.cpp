@@ -1,6 +1,6 @@
 #include "server_Commands.h"
 #include "server_ProtectedFS.h"
-#include "server_ProtectedResponses.h"
+#include "server_Responses.h"
 #include <set>
 
 #define PASS_REQUIRED_KEY "passRequired"
@@ -34,23 +34,23 @@
 // QUIT
 #define QUIT_SUCCESS_KEY "quitSuccess"
 
-std::string buildLoginRequiredMessage(ProtectedResponses* r) {
+std::string buildLoginRequiredMessage(Responses* r) {
     return "530 " + r->get(CLIENT_NOT_LOGGED_KEY) + '\n';
 }
 
-std::string buildUnknownCommandMessage(ProtectedResponses* r) {
+std::string buildUnknownCommandMessage(Responses* r) {
     return "530 " + r->get(UNKNOWN_COMMAND_KEY) + '\n';
 }
 
-std::string buildLoginSuccessMessage(ProtectedResponses* r) {
+std::string buildLoginSuccessMessage(Responses* r) {
     return "230 " + r->get(LOGIN_SUCCESS_KEY) + '\n';
 }
 
-std::string buildLoginFailedMessage(ProtectedResponses* r) {
+std::string buildLoginFailedMessage(Responses* r) {
     return "530 " + r->get(LOGIN_FAILED_KEY) + '\n';
 }
 
-UserCommand::UserCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+UserCommand::UserCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -62,7 +62,7 @@ std::string UserCommand::execute() {
 
 UserCommand::~UserCommand() {}
 
-PassCommand::PassCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+PassCommand::PassCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -76,7 +76,7 @@ std::string PassCommand::execute() {
 
 PassCommand::~PassCommand() {}
 
-SystCommand::SystCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+SystCommand::SystCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -91,7 +91,7 @@ std::string SystCommand::execute() {
 
 SystCommand::~SystCommand() {}
 
-ListCommand::ListCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+ListCommand::ListCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -113,7 +113,7 @@ std::string ListCommand::execute() {
 
 ListCommand::~ListCommand() {}
 
-HelpCommand::HelpCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+HelpCommand::HelpCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -128,7 +128,7 @@ std::string HelpCommand::execute() {
 
 HelpCommand::~HelpCommand() {}
 
-PWDCommand::PWDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+PWDCommand::PWDCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;
@@ -144,7 +144,7 @@ std::string PWDCommand::execute() {
 
 PWDCommand::~PWDCommand() {}
 
-MKDCommand::MKDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l,
+MKDCommand::MKDCommand(ProtectedFS* f, Responses* r, LogInfo* l,
                        std::string d) {
     this->dir = d;
     this->filesystem = f;
@@ -165,7 +165,7 @@ std::string MKDCommand::execute() {
 
 MKDCommand::~MKDCommand() {}
 
-RMDCommand::RMDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l,
+RMDCommand::RMDCommand(ProtectedFS* f, Responses* r, LogInfo* l,
                        std::string d) {
     this->dir = d;
     this->filesystem = f;
@@ -186,7 +186,7 @@ std::string RMDCommand::execute() {
 
 RMDCommand::~RMDCommand() {}
 
-InvalidCommand::InvalidCommand(ProtectedFS* f, ProtectedResponses* r,
+InvalidCommand::InvalidCommand(ProtectedFS* f, Responses* r,
                                LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
@@ -199,7 +199,7 @@ std::string InvalidCommand::execute() {
 
 InvalidCommand::~InvalidCommand() {}
 
-QuitCommand::QuitCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+QuitCommand::QuitCommand(ProtectedFS* f, Responses* r, LogInfo* l) {
     this->filesystem = f;
     this->responses = r;
     this->logger = l;

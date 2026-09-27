@@ -5,15 +5,15 @@
 #include <mutex>
 #include <string>
 
-class ProtectedResponses {
+class Responses {
   private:
     std::map<std::string, std::string> responses;
 
   public:
-    ProtectedResponses(std::string filename);
+    Responses(std::string filename);
     std::string get(std::string k);
     void set(std::string k, std::string v);
-    ~ProtectedResponses();
+    ~Responses();
 };
 
 #endif

@@ -4,18 +4,18 @@
 #include "server_Command.h"
 #include "server_LogInfo.h"
 #include "server_ProtectedFS.h"
-#include "server_ProtectedResponses.h"
+#include "server_Responses.h"
 #include <string.h>
 
 class CommandFactory {
   private:
     ProtectedFS* fs;
-    ProtectedResponses* responses;
+    Responses* responses;
     LogInfo logger;
     bool* dead;
 
   public:
-    CommandFactory(ProtectedFS* fs, ProtectedResponses* responses, bool* dead);
+    CommandFactory(ProtectedFS* fs, Responses* responses, bool* dead);
     Command* create(std::string str);
 };
 
