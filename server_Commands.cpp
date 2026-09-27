@@ -31,19 +31,19 @@
 #define QUIT_SUCCESS_KEY "quitSuccess"
 
 std::string buildLoginRequiredMessage(ProtectedResponses* r) {
-    return "530 " + r->getValue(CLIENT_NOT_LOGGED_KEY) + '\n';
+    return "530 " + r->get(CLIENT_NOT_LOGGED_KEY) + '\n';
 }
 
 std::string buildUnknownCommandMessage(ProtectedResponses* r) {
-    return "530 " + r->getValue(UNKNOWN_COMMAND_KEY) + '\n';
+    return "530 " + r->get(UNKNOWN_COMMAND_KEY) + '\n';
 }
 
 std::string buildLoginSuccessMessage(ProtectedResponses* r) {
-    return "230 " + r->getValue(LOGIN_SUCCESS_KEY) + '\n';
+    return "230 " + r->get(LOGIN_SUCCESS_KEY) + '\n';
 }
 
 std::string buildLoginFailedMessage(ProtectedResponses* r) {
-    return "530 " + r->getValue(LOGIN_FAILED_KEY) + '\n';
+    return "530 " + r->get(LOGIN_FAILED_KEY) + '\n';
 }
 
 UserCommand::UserCommand(ProtectedFS* fs, ProtectedResponses* responses,
@@ -54,7 +54,7 @@ UserCommand::UserCommand(ProtectedFS* fs, ProtectedResponses* responses,
 }
 
 std::string UserCommand::execute() {
-    return ("331 " + this->responses->getValue(PASS_REQUIRED_KEY) + '\n');
+    return ("331 " + this->responses->get(PASS_REQUIRED_KEY) + '\n');
 }
 
 UserCommand::~UserCommand() {}
@@ -81,7 +81,7 @@ SystCommand::SystCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
 
 std::string SystCommand::execute() {
     if (logger->logged())
-        return "215 " + this->responses->getValue(SYSTEM_INFO_KEY) + '\n';
+        return "215 " + this->responses->get(SYSTEM_INFO_KEY) + '\n';
     else
         return buildLoginRequiredMessage(this->responses);
 }
@@ -98,14 +98,14 @@ std::string ListCommand::execute() {
     if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
 
-    std::string msg("150 " + this->responses->getValue(LIST_BEGIN_KEY) + '\n');
+    std::string msg("150 " + this->responses->get(LIST_BEGIN_KEY) + '\n');
 
     std::set<std::string>* buffer = this->filesystem->listFiles();
 
     for (auto str : *buffer)
         msg = msg + "drwxrwxrwx 0 1000 1000 4096 Sep 24 12:34 " + str + '\n';
 
-    return msg + "226 " + this->responses->getValue(LIST_END_KEY) + '\n';
+    return msg + "226 " + this->responses->get(LIST_END_KEY) + '\n';
 }
 
 ListCommand::~ListCommand() {}
@@ -120,7 +120,7 @@ std::string HelpCommand::execute() {
     if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
 
-    return "214 " + this->responses->getValue(COMMANDS_KEY) + '\n';
+    return "214 " + this->responses->get(COMMANDS_KEY) + '\n';
 }
 
 HelpCommand::~HelpCommand() {}
@@ -133,7 +133,7 @@ PWDCommand::PWDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
 
 std::string PWDCommand::execute() {
     if (logger->logged())
-        return "257 " + this->responses->getValue(PWD_SUCCESS_KEY) + '\n';
+        return "257 " + this->responses->get(PWD_SUCCESS_KEY) + '\n';
 
     return buildLoginRequiredMessage(this->responses);
 }
@@ -153,10 +153,10 @@ std::string MKDCommand::execute() {
         return buildLoginRequiredMessage(this->responses);
 
     if (this->filesystem->makeDir(this->dir))
-        return "550 " + this->responses->getValue(MKD_FAILED_KEY) + '\n';
+        return "550 " + this->responses->get(MKD_FAILED_KEY) + '\n';
 
     return "257 \"" + this->dir + "\" " +
-           this->responses->getValue(MKD_SUCCESS_KEY) + '\n';
+           this->responses->get(MKD_SUCCESS_KEY) + '\n';
 }
 
 MKDCommand::~MKDCommand() {}
@@ -174,10 +174,10 @@ std::string RMDCommand::execute() {
         return buildLoginRequiredMessage(this->responses);
 
     if (this->filesystem->removeDir(this->dir))
-        return "550 " + this->responses->getValue(RMD_FAILED_KEY) + '\n';
+        return "550 " + this->responses->get(RMD_FAILED_KEY) + '\n';
 
     return "250 \"" + this->dir + "\" " +
-           this->responses->getValue(RMD_SUCCESS_KEY) + '\n';
+           this->responses->get(RMD_SUCCESS_KEY) + '\n';
 }
 
 RMDCommand::~RMDCommand() {}
@@ -202,7 +202,7 @@ QuitCommand::QuitCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
 }
 
 std::string QuitCommand::execute() {
-    return "221 " + this->responses->getValue(QUIT_SUCCESS_KEY) + '\n';
+    return "221 " + this->responses->get(QUIT_SUCCESS_KEY) + '\n';
 }
 
 QuitCommand::~QuitCommand() {}

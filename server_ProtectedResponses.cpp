@@ -6,19 +6,25 @@
 
 using namespace std;
 
-ProtectedResponses::ProtectedResponses(std::string file_name) {
+ProtectedResponses::ProtectedResponses(std::string filename) {
 
-    fstream in(file_name);
-    string key, value;
+    fstream config_f(filename);
+    string k, v;
 
-    while (getline(in, key, EQUAL_DEL)) {
-        getline(in, value);
-        responses.insert(pair<string, string>(key, value));
+    while (getline(config_f, k, EQUAL_DEL)) {
+        getline(config_f, v);
+        this->set(k, v);
     }
 
-    in.close();
+    config_f.close();
 }
 
-string ProtectedResponses::getValue(string key) { return this->responses[key]; }
+string ProtectedResponses::get(string k) { 
+    return this->responses[k]; 
+}
+
+void ProtectedResponses::set(string k, string v) {
+    this->responses[k] = v;
+}
 
 ProtectedResponses::~ProtectedResponses() {}

@@ -13,14 +13,14 @@ Talker::Talker(int skt, ProtectedFS* filesystem, ProtectedResponses* responses)
 
 void Talker::run() {
 
-    skt.sendMsg("220 " + this->responses->getValue("newClient") + '\n');
+    skt.sendMsg("220 " + this->responses->get("newClient") + '\n');
     std::cout << "- Se conectó nuevo cliente -" << std::endl;
     std::string command;
 
     // EN la ultima iteracion se queda trabado en el receiveMsg
     while (skt.receiveMsg(command) && !dead) {
         std::cout << "Se recibio: " << command;
-        Command* cmd = this->factory.createCommand(command);
+        Command* cmd = this->factory.create(command);
         skt.sendMsg(cmd->execute());
         delete cmd;
         command.clear();

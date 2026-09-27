@@ -17,13 +17,13 @@
 
 CommandFactory::CommandFactory(ProtectedFS* fs, ProtectedResponses* responses,
                                bool* dead)
-    : logger(responses->getValue("user"), responses->getValue("password")) {
+    : logger(responses->get("user"), responses->get("password")) {
     this->fs = fs;
     this->responses = responses;
     this->dead = dead;
 }
 
-Command* CommandFactory::createCommand(std::string str) {
+Command* CommandFactory::create(std::string str) {
     std::string cmd, arg;
     std::istringstream split(str);
 

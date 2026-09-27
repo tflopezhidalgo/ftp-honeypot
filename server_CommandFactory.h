@@ -16,7 +16,7 @@ class CommandFactory {
 
   public:
     CommandFactory(ProtectedFS* fs, ProtectedResponses* responses, bool* dead);
-    Command* createCommand(std::string str);
+    Command* create(std::string str);
 };
 
 #endif
