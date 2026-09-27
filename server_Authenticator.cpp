@@ -1,27 +1,31 @@
-#include "server_LogInfo.h"
+#include "server_Authenticator.h"
 #include <string>
 #include <iostream>
 
-LogInfo::LogInfo(std::string user, std::string pass) {
+Authenticator::Authenticator(std::string user, std::string pass) {
+    // Estos pueden ser tomados directamente.
     this->user = user;
     this->pass = pass;
-    passOK = false;
-    userOK = false;
+
+    this->passOK = false;
+    this->userOK = false;
 
     std::cout << "Using user: " << this->user << std::endl;
     std::cout << "Using pass: " << this->pass << std::endl;
 }
 
-void LogInfo::tryUser(std::string user) {
+// La autentication se hace en dos pasos, 
+// primero el usuario y luego la contraseña. 
+
+void Authenticator::checkUser(std::string user) {
     if (this->user == user) {
         userOK = true;
-        passOK = false;
 
         std::cout << "User verified: " << this->user << std::endl;
     }
 }
 
-void LogInfo::tryPass(std::string pass) {
+void Authenticator::checkPassword(std::string pass) {
     if (this->pass == pass) {
         passOK = true;
 
@@ -29,4 +33,4 @@ void LogInfo::tryPass(std::string pass) {
     }
 }
 
-bool LogInfo::logged() { return (userOK && passOK); }
+bool Authenticator::logged() { return (userOK && passOK); }

@@ -50,163 +50,163 @@ std::string buildLoginFailedMessage(ConfigLoader* r) {
     return "530 " + r->get(LOGIN_FAILED_KEY) + '\n';
 }
 
-UserCommand::UserCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+UserCommand::UserCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string UserCommand::execute() {
-    return ("331 " + this->responses->get(PASS_REQUIRED_KEY) + '\n');
+    return ("331 " + this->config->get(PASS_REQUIRED_KEY) + '\n');
 }
 
 UserCommand::~UserCommand() {}
 
-PassCommand::PassCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+PassCommand::PassCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string PassCommand::execute() {
-    if (!logger->logged())
-        return buildLoginFailedMessage(this->responses);
-    return buildLoginSuccessMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginFailedMessage(this->config);
+    return buildLoginSuccessMessage(this->config);
 }
 
 PassCommand::~PassCommand() {}
 
-SystCommand::SystCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+SystCommand::SystCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string SystCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
-    return "215 " + this->responses->get(SYSTEM_INFO_KEY) + '\n';
+    return "215 " + this->config->get(SYSTEM_INFO_KEY) + '\n';
 }
 
 SystCommand::~SystCommand() {}
 
-ListCommand::ListCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+ListCommand::ListCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string ListCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
     std::set<std::string>* files = this->filesystem->list();
 
-    std::string msg("150 " + this->responses->get(LIST_BEGIN_KEY) + '\n');
+    std::string msg("150 " + this->config->get(LIST_BEGIN_KEY) + '\n');
 
     for (auto f : *files)
         msg = msg + "drwxrwxrwx 0 1000 1000 4096 Sep 24 12:34 " + f + '\n';
 
-    return msg + "226 " + this->responses->get(LIST_END_KEY) + '\n';
+    return msg + "226 " + this->config->get(LIST_END_KEY) + '\n';
 }
 
 ListCommand::~ListCommand() {}
 
-HelpCommand::HelpCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+HelpCommand::HelpCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string HelpCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
-    return "214 " + this->responses->get(COMMANDS_KEY) + '\n';
+    return "214 " + this->config->get(COMMANDS_KEY) + '\n';
 }
 
 HelpCommand::~HelpCommand() {}
 
-PWDCommand::PWDCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+PWDCommand::PWDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string PWDCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
-    return "257 " + this->responses->get(CURRENT_DIRECTORY_MSG_KEY) + '\n';
+    return "257 " + this->config->get(CURRENT_DIRECTORY_MSG_KEY) + '\n';
 
 }
 
 PWDCommand::~PWDCommand() {}
 
-MKDCommand::MKDCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l,
+MKDCommand::MKDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l,
                        std::string d) {
     this->dir = d;
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string MKDCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
     if (this->filesystem->make(this->dir))
-        return "550 " + this->responses->get(MKD_FAILED_KEY) + '\n';
+        return "550 " + this->config->get(MKD_FAILED_KEY) + '\n';
 
     return "257 \"" + this->dir + "\" " +
-           this->responses->get(MKD_SUCCESS_KEY) + '\n';
+           this->config->get(MKD_SUCCESS_KEY) + '\n';
 }
 
 MKDCommand::~MKDCommand() {}
 
-RMDCommand::RMDCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l,
+RMDCommand::RMDCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l,
                        std::string d) {
     this->dir = d;
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string RMDCommand::execute() {
-    if (!logger->logged())
-        return buildLoginRequiredMessage(this->responses);
+    if (!authenticator->logged())
+        return buildLoginRequiredMessage(this->config);
 
     if (this->filesystem->remove(this->dir))
-        return "550 " + this->responses->get(RMD_FAILED_KEY) + '\n';
+        return "550 " + this->config->get(RMD_FAILED_KEY) + '\n';
 
     return "250 \"" + this->dir + "\" " +
-           this->responses->get(RMD_SUCCESS_KEY) + '\n';
+           this->config->get(RMD_SUCCESS_KEY) + '\n';
 }
 
 RMDCommand::~RMDCommand() {}
 
 InvalidCommand::InvalidCommand(ProtectedFS* f, ConfigLoader* r,
-                               LogInfo* l) {
+                               Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string InvalidCommand::execute() {
-    return buildUnknownCommandMessage(this->responses);
+    return buildUnknownCommandMessage(this->config);
 }
 
 InvalidCommand::~InvalidCommand() {}
 
-QuitCommand::QuitCommand(ProtectedFS* f, ConfigLoader* r, LogInfo* l) {
+QuitCommand::QuitCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
     this->filesystem = f;
-    this->responses = r;
-    this->logger = l;
+    this->config = r;
+    this->authenticator = l;
 }
 
 std::string QuitCommand::execute() {
-    return "221 " + this->responses->get(QUIT_SUCCESS_KEY) + '\n';
+    return "221 " + this->config->get(QUIT_SUCCESS_KEY) + '\n';
 }
 
 QuitCommand::~QuitCommand() {}

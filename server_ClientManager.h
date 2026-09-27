@@ -14,7 +14,7 @@ class ClientManager : public Thread {
     AcceptorSocket acceptor;
     std::vector<Talker*> talkers;
     ProtectedFS filesystem;
-    ConfigLoader responses;
+    ConfigLoader config;
     bool alive;
 
   public:

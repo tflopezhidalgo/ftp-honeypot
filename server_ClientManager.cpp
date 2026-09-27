@@ -5,13 +5,13 @@
 #include <string>
 
 ClientManager::ClientManager(std::string service, std::string config)
-    : acceptor(service), responses(config) {}
+    : acceptor(service), config(config) {}
 
 void ClientManager::run() {
     this->alive = true;
     int new_skt = -1;
     while ((new_skt = this->acceptor.acceptSocket()) != -1 && alive) {
-        Talker* talker = new Talker(new_skt, &filesystem, &responses);
+        Talker* talker = new Talker(new_skt, &filesystem, &config);
         talker->start();
         talkers.push_back(talker);
 
