@@ -5,8 +5,12 @@
 
 #define PASS_REQUIRED_KEY "passRequired"
 #define UNKNOWN_COMMAND_KEY "unknownCommand"
+
+// HELP
 #define COMMANDS_KEY "commands"
-#define PWD_SUCCESS_KEY "pwdSuccess"
+
+// PWD
+#define CURRENT_DIRECTORY_MSG_KEY "currentDirectoryMsg"
 
 // LOGIN
 #define LOGIN_SUCCESS_KEY "loginSuccess"
@@ -46,11 +50,10 @@ std::string buildLoginFailedMessage(ProtectedResponses* r) {
     return "530 " + r->get(LOGIN_FAILED_KEY) + '\n';
 }
 
-UserCommand::UserCommand(ProtectedFS* fs, ProtectedResponses* responses,
-                         LogInfo* logger) {
-    this->filesystem = fs;
-    this->responses = responses;
-    this->logger = logger;
+UserCommand::UserCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+    this->filesystem = f;
+    this->responses = r;
+    this->logger = l;
 }
 
 std::string UserCommand::execute() {
@@ -59,16 +62,16 @@ std::string UserCommand::execute() {
 
 UserCommand::~UserCommand() {}
 
-PassCommand::PassCommand(ProtectedFS* fs, ProtectedResponses* responses,
-                         LogInfo* logger) {
-    this->filesystem = fs;
-    this->responses = responses;
-    this->logger = logger;
+PassCommand::PassCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
+    this->filesystem = f;
+    this->responses = r;
+    this->logger = l;
 }
 
 std::string PassCommand::execute() {
-    return logger->logged() ? buildLoginSuccessMessage(this->responses)
-                            : buildLoginFailedMessage(this->responses);
+    if (!logger->logged())
+        return buildLoginFailedMessage(this->responses);
+    return buildLoginSuccessMessage(this->responses);
 }
 
 PassCommand::~PassCommand() {}
@@ -80,10 +83,10 @@ SystCommand::SystCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
 }
 
 std::string SystCommand::execute() {
-    if (logger->logged())
-        return "215 " + this->responses->get(SYSTEM_INFO_KEY) + '\n';
-    else
+    if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
+
+    return "215 " + this->responses->get(SYSTEM_INFO_KEY) + '\n';
 }
 
 SystCommand::~SystCommand() {}
@@ -98,12 +101,12 @@ std::string ListCommand::execute() {
     if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
 
+    std::set<std::string>* files = this->filesystem->list();
+
     std::string msg("150 " + this->responses->get(LIST_BEGIN_KEY) + '\n');
 
-    std::set<std::string>* buffer = this->filesystem->listFiles();
-
-    for (auto str : *buffer)
-        msg = msg + "drwxrwxrwx 0 1000 1000 4096 Sep 24 12:34 " + str + '\n';
+    for (auto f : *files)
+        msg = msg + "drwxrwxrwx 0 1000 1000 4096 Sep 24 12:34 " + f + '\n';
 
     return msg + "226 " + this->responses->get(LIST_END_KEY) + '\n';
 }
@@ -132,10 +135,11 @@ PWDCommand::PWDCommand(ProtectedFS* f, ProtectedResponses* r, LogInfo* l) {
 }
 
 std::string PWDCommand::execute() {
-    if (logger->logged())
-        return "257 " + this->responses->get(PWD_SUCCESS_KEY) + '\n';
+    if (!logger->logged())
+        return buildLoginRequiredMessage(this->responses);
 
-    return buildLoginRequiredMessage(this->responses);
+    return "257 " + this->responses->get(CURRENT_DIRECTORY_MSG_KEY) + '\n';
+
 }
 
 PWDCommand::~PWDCommand() {}
@@ -152,7 +156,7 @@ std::string MKDCommand::execute() {
     if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
 
-    if (this->filesystem->makeDir(this->dir))
+    if (this->filesystem->make(this->dir))
         return "550 " + this->responses->get(MKD_FAILED_KEY) + '\n';
 
     return "257 \"" + this->dir + "\" " +
@@ -173,7 +177,7 @@ std::string RMDCommand::execute() {
     if (!logger->logged())
         return buildLoginRequiredMessage(this->responses);
 
-    if (this->filesystem->removeDir(this->dir))
+    if (this->filesystem->remove(this->dir))
         return "550 " + this->responses->get(RMD_FAILED_KEY) + '\n';
 
     return "250 \"" + this->dir + "\" " +

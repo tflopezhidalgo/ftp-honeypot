@@ -7,24 +7,28 @@
 
 ProtectedFS::ProtectedFS() {}
 
-std::set<std::string>* ProtectedFS::listFiles() {
-    std::unique_lock<std::mutex> lck(m);
+std::set<std::string>* ProtectedFS::list() {
+    std::unique_lock<std::mutex> lck(this->mutex);
     return &this->files;
 }
 
-bool ProtectedFS::makeDir(std::string dir) {
-    std::unique_lock<std::mutex> lck(m);
-    if (!this->files.count(dir)) {
+bool ProtectedFS::make(std::string dir) {
+    std::unique_lock<std::mutex> lck(this->mutex);
+    bool fExists = !!this->files.count(dir);
+
+    if (!fExists) {
         this->files.insert(dir);
         return 0;
     }
     return 1;
 }
 
-bool ProtectedFS::removeDir(std::string dir) {
-    std::unique_lock<std::mutex> lck(m);
-    if (this->files.count(dir)) {
-        this->files.erase(files.find(dir));
+bool ProtectedFS::remove(std::string dir) {
+    std::unique_lock<std::mutex> lck(this->mutex);
+    bool fExists = !!this->files.count(dir);
+
+    if (fExists) {
+        this->files.erase(this->files.find(dir));
         return 0;
     }
     return 1;

@@ -15,15 +15,15 @@ void Talker::run() {
 
     skt.sendMsg("220 " + this->responses->get("newClient") + '\n');
     std::cout << "- Se conectó nuevo cliente -" << std::endl;
-    std::string command;
+    std::string cmd_str;
 
     // EN la ultima iteracion se queda trabado en el receiveMsg
-    while (skt.receiveMsg(command) && !dead) {
-        std::cout << "Se recibio: " << command;
-        Command* cmd = this->factory.create(command);
+    while (skt.receiveMsg(cmd_str) && !dead) {
+        std::cout << "Se recibio: " << cmd_str;
+        Command* cmd = this->factory.create(cmd_str);
         skt.sendMsg(cmd->execute());
         delete cmd;
-        command.clear();
+        cmd_str.clear();
         std::cout << "se llama a receive\n";
     }
     std::cout << " - Se borro un cliente - \n";

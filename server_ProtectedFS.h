@@ -7,14 +7,14 @@
 
 class ProtectedFS {
   private:
-    std::mutex m;
+    std::mutex mutex;
     std::set<std::string> files;
 
   public:
     ProtectedFS();
-    std::set<std::string>* listFiles();
-    bool makeDir(std::string dir);
-    bool removeDir(std::string dir);
+    std::set<std::string>* list();
+    bool make(std::string dir);
+    bool remove(std::string dir);
     ~ProtectedFS();
 };
 
