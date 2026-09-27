@@ -3,13 +3,13 @@
 
 #include "server_LogInfo.h"
 #include "server_ProtectedFS.h"
-#include "server_Responses.h"
+#include "server_ConfigLoader.h"
 #include <string>
 
 class Command {
   protected:
     ProtectedFS* filesystem;
-    Responses* responses;
+    ConfigLoader* responses;
     LogInfo* logger;
 
   public:

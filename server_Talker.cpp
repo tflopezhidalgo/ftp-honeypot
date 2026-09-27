@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-Talker::Talker(int skt, ProtectedFS* filesystem, Responses* responses)
+Talker::Talker(int skt, ProtectedFS* filesystem, ConfigLoader* responses)
     : skt(skt), factory(filesystem, responses, &dead) {
     this->responses = responses;
     this->filesystem = filesystem;

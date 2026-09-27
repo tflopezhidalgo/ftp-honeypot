@@ -2,7 +2,7 @@
 #define LOGINFO_H
 
 #include "server_ProtectedFS.h"
-#include "server_Responses.h"
+#include "server_ConfigLoader.h"
 #include <string>
 
 class LogInfo {

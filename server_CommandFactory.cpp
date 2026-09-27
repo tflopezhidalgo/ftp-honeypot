@@ -15,7 +15,7 @@
 #define QUIT_CMD "QUIT"
 #define SPACE_DEL ' '
 
-CommandFactory::CommandFactory(ProtectedFS* fs, Responses* responses,
+CommandFactory::CommandFactory(ProtectedFS* fs, ConfigLoader* responses,
                                bool* dead)
     : logger(responses->get("user"), responses->get("password")) {
     this->fs = fs;
