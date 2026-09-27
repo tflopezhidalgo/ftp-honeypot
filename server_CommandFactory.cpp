@@ -1,9 +1,8 @@
 #include "server_CommandFactory.h"
-#include "server_Commands.h"
 #include "server_Command.h"
+#include "server_Commands.h"
 #include <sstream>
 #include <string>
-#include <iostream>
 
 #define USER_CMD "USER"
 #define PASS_CMD "PASS"
@@ -16,17 +15,15 @@
 #define QUIT_CMD "QUIT"
 #define SPACE_DEL ' '
 
-CommandFactory::CommandFactory(ProtectedFS* fs,  
-                               ProtectedResponses* responses,
-                               bool* dead) : 
-                               logger(responses->getValue("user"), 
-                               responses->getValue("password")){
+CommandFactory::CommandFactory(ProtectedFS* fs, ProtectedResponses* responses,
+                               bool* dead)
+    : logger(responses->getValue("user"), responses->getValue("password")) {
     this->fs = fs;
     this->responses = responses;
     this->dead = dead;
 }
 
-Command* CommandFactory::createCommand(std::string str){
+Command* CommandFactory::createCommand(std::string str) {
     std::string cmd, arg;
     std::istringstream split(str);
 
@@ -36,16 +33,16 @@ Command* CommandFactory::createCommand(std::string str){
     if (cmd.back() == '\n')
         cmd.pop_back();
 
-    if(arg.back() == '\n')
+    if (arg.back() == '\n')
         arg.pop_back();
 
-    if (cmd == USER_CMD){
+    if (cmd == USER_CMD) {
         this->logger.tryUser(arg);
         return new UserCommand(fs, responses, &logger);
-    }else if (cmd == PASS_CMD){
+    } else if (cmd == PASS_CMD) {
         this->logger.tryPass(arg);
         return new PassCommand(fs, responses, &logger);
-    }else if (cmd == SYST_CMD)
+    } else if (cmd == SYST_CMD)
         return new SystCommand(fs, responses, &logger);
     else if (cmd == LIST_CMD)
         return new ListCommand(fs, responses, &logger);
@@ -57,12 +54,10 @@ Command* CommandFactory::createCommand(std::string str){
         return new MKDCommand(fs, responses, &logger, arg);
     else if (cmd == RMD_CMD)
         return new RMDCommand(fs, responses, &logger, arg);
-    else if (cmd ==QUIT_CMD){
+    else if (cmd == QUIT_CMD) {
         *dead = true;
         return new QuitCommand(fs, responses, &logger);
-    }else{
+    } else {
         return new InvalidCommand(fs, responses, &logger);
     }
-
 }
-

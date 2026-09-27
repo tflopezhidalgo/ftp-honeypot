@@ -1,31 +1,36 @@
-#include <iostream>
 #include "common_Socket.h"
 #include <iostream>
 #include <string>
 
-int main(int argc, char* argv[]){
+const std::string QUIT_MSG = "QUIT";
+
+/**
+ * Programa cliente para el servidor SFTP.
+ */
+
+int main(int argc, char* argv[]) {
 
     Socket skt(argv[1], argv[2]);
     bool exit_set = false;
     std::string buffer;
-   
+
     skt.receiveMsg(buffer);
     std::cout << buffer;
     buffer.clear();
 
-    while (!exit_set){
-        if(!getline(std::cin, buffer))
+    while (!exit_set) {
+        if (!getline(std::cin, buffer))
             break;
-        if (buffer == "QUIT")
+        if (buffer == QUIT_MSG)
             exit_set = true;
         if (skt.sendMsg(buffer + '\n') == 0)
             break;
         buffer.clear();
         if (skt.receiveMsg(buffer) == 0)
             break;
-        if (buffer.find("150") != std::string::npos){
+        if (buffer.find("150") != std::string::npos) {
             std::string buf2;
-            while (buffer.find("226") == std::string::npos){
+            while (buffer.find("226") == std::string::npos) {
                 skt.receiveMsg(buf2);
                 buffer += buf2;
                 buf2.clear();
@@ -35,6 +40,6 @@ int main(int argc, char* argv[]){
     }
 
     skt.kill();
-    
+
     return 0;
 }
