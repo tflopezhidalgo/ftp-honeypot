@@ -3,15 +3,15 @@
 
 #include <string>
 
-class AcceptorSocket{
-    private:
-        int skt;
+class AcceptorSocket {
+  private:
+    int skt;
 
-    public:
-        AcceptorSocket(std::string service);
-        int acceptSocket(); 
-        void kill();
-        ~AcceptorSocket();
+  public:
+    AcceptorSocket(std::string service);
+    int acceptSocket();
+    void kill();
+    ~AcceptorSocket();
 };
 
 #endif

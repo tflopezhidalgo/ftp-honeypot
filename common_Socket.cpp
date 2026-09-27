@@ -1,20 +1,17 @@
 #include "common_Socket.h"
+#include <cstring>
+#include <netdb.h>
+#include <stdio.h>
+#include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <cstring>
-#include <stdio.h>
 #include <unistd.h>
-#include <netdb.h>
-#include <string>
-#include <iostream>
 
 // Ya me pasan el socket abierto (SocketManager)
-Socket::Socket(int open_fd){
-    this->fd = open_fd;
-}
+Socket::Socket(int open_fd) { this->fd = open_fd; }
 
 // Tengo que abrir el socket yo (soy cliente)
-Socket::Socket(std::string host, std::string service){
+Socket::Socket(std::string host, std::string service) {
     struct addrinfo h;
     struct addrinfo *r = NULL, *ptr = NULL;
     bool connected = false;
@@ -26,9 +23,9 @@ Socket::Socket(std::string host, std::string service){
 
     getaddrinfo(host.c_str(), service.c_str(), &h, &r);
 
-    for (ptr = r; ptr != NULL && connected == false; ptr = ptr->ai_next){
+    for (ptr = r; ptr != NULL && connected == false; ptr = ptr->ai_next) {
         this->fd = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-        if (this->fd != -1){
+        if (this->fd != -1) {
             connect(this->fd, ptr->ai_addr, ptr->ai_addrlen);
             connected = true;
         }
@@ -37,11 +34,11 @@ Socket::Socket(std::string host, std::string service){
     freeaddrinfo(r);
 }
 
-int Socket::sendMsg(std::string msg){
+int Socket::sendMsg(std::string msg) {
     uint32_t total_sent = 0, sent = 0;
     char buf = 0;
     bool cont = true;
-    while (total_sent < msg.size() && cont){
+    while (total_sent < msg.size() && cont) {
         buf = msg[total_sent];
         sent = send(fd, &buf, 1, MSG_NOSIGNAL);
         if (sent == 0)
@@ -51,26 +48,23 @@ int Socket::sendMsg(std::string msg){
     return total_sent;
 }
 
-int Socket::receiveMsg(std::string &msg){
-   char buf = 0;
-   bool cont = true;
-   uint32_t total_received = 0, received = 0;
-   while (buf != '\n' && cont){
-       received = recv(this->fd, &buf, 1, 0);
-       msg += buf;
-       total_received += received;
-       if (received == 0)
-           cont = false;
-    }   
+int Socket::receiveMsg(std::string& msg) {
+    char buf = 0;
+    bool cont = true;
+    uint32_t total_received = 0, received = 0;
+    while (buf != '\n' && cont) {
+        received = recv(this->fd, &buf, 1, 0);
+        msg += buf;
+        total_received += received;
+        if (received == 0)
+            cont = false;
+    }
     return total_received;
 }
 
-void Socket::kill(){
+void Socket::kill() {
     shutdown(this->fd, SHUT_RDWR);
     close(this->fd);
 }
 
-Socket::~Socket(){
-
-}
-
+Socket::~Socket() {}
