@@ -8,11 +8,11 @@
 class ProtectedResponses {
   private:
     std::map<std::string, std::string> responses;
-    std::mutex m;
 
   public:
-    ProtectedResponses(std::string file_name);
-    std::string getValue(std::string key);
+    ProtectedResponses(std::string filename);
+    std::string get(std::string k);
+    void set(std::string k, std::string v);
     ~ProtectedResponses();
 };
 
