@@ -1,6 +1,6 @@
-#include "server_Commands.h"
-#include "server_ProtectedFS.h"
-#include "server_ConfigLoader.h"
+#include "../server/server_Commands.h"
+#include "../server/server_ProtectedFS.h"
+#include "../server/server_ConfigLoader.h"
 #include <set>
 
 #define PASS_REQUIRED_KEY "passRequired"

@@ -1,10 +1,10 @@
-#ifndef SERVER_COMMANDS_H
-#define SERVER_COMMANDS_H
+#ifndef server_COMMANDS_H
+#define server_COMMANDS_H
 
-#include "server_Command.h"
-#include "server_Authenticator.h"
-#include "server_ProtectedFS.h"
-#include "server_ConfigLoader.h"
+#include "../server/server_Command.h"
+#include "../server/server_Authenticator.h"
+#include "../server/server_ProtectedFS.h"
+#include "../server/server_ConfigLoader.h"
 
 class UserCommand : public Command {
   public:

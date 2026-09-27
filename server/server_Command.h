@@ -1,9 +1,9 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "server_Authenticator.h"
-#include "server_ProtectedFS.h"
-#include "server_ConfigLoader.h"
+#include "../server/server_Authenticator.h"
+#include "../server/server_ProtectedFS.h"
+#include "../server/server_ConfigLoader.h"
 #include <string>
 
 class Command {

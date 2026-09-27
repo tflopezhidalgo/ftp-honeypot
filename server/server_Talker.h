@@ -1,9 +1,9 @@
-#ifndef SERVER_TALKER_H
-#define SERVER_TALKER_H
+#ifndef server_TALKER_H
+#define server_TALKER_H
 
-#include "common_Socket.h"
-#include "server_CommandFactory.h"
-#include "server_Thread.h"
+#include "../common/common_Socket.h"
+#include "../server/server_CommandFactory.h"
+#include "../server/server_Thread.h"
 
 // Conexion 1 a 1 con un cliente.
 
