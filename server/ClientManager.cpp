@@ -1,6 +1,6 @@
-#include "server_ClientManager.h"
-#include "server_AcceptorSocket.h"
-#include "server_ConfigLoader.h"
+#include "../server/ClientManager.h"
+#include "../server/AcceptorSocket.h"
+#include "../server/ConfigLoader.h"
 #include <iostream>
 #include <string>
 

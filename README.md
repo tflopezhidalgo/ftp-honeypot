@@ -19,7 +19,7 @@ Para generar los ejecutables basta con correr `make`, esto generara el binario p
 Para correr el servidor basta con indicar el archivo de configuracion a utilizar y el puerto
 
 ``` 
-./server <puerto> <archivo configuracion>
+./build/server <puerto> <archivo configuracion>
 ```
 
 ### Cliente
@@ -27,5 +27,5 @@ Para correr el servidor basta con indicar el archivo de configuracion a utilizar
 Para correr el cliente debemos conocer el puerto en que se levanto el servidor
 
 ```
-./client <puerto>
+./build/client <puerto>
 ```

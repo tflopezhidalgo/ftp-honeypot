@@ -104,15 +104,19 @@ CXXFLAGS += $(CFLAGS)
 ifeq ($(extension), c)
 CFLAGS += -std=$(CSTD)
 LD = $(CC)
+COMPILE = $(CC)
+COMPILE_FLAGS = $(CFLAGS)
 else
 CXXFLAGS += -std=$(CXXSTD)
 LD = $(CXX)
+COMPILE = $(CXX)
+COMPILE_FLAGS = $(CXXFLAGS)
 endif
 
 # Si no especifica archivos, tomo todos.
-fuentes_client ?= $(wildcard client*.$(extension))
-fuentes_server ?= $(wildcard server*.$(extension))
-fuentes_common ?= $(wildcard common*.$(extension))
+fuentes_client ?= $(wildcard client/*.$(extension))
+fuentes_server ?= $(wildcard server/*.$(extension))
+fuentes_common ?= $(wildcard common/*.$(extension))
 directorios = $(shell find . -type d -regex '.*\w+')
 
 occ := $(CC)
@@ -128,17 +132,28 @@ RM =  @echo "  CLEAN"; $(orm)
 LD =  @echo "  LD  $@"; $(old)
 endif
 
-
 # REGLAS
 #########
 
-.PHONY: all clean
+.PHONY: all client server clean
 
 all: client server
 
-o_common_files = $(patsubst %.$(extension),%.o,$(fuentes_common))
-o_client_files = $(patsubst %.$(extension),%.o,$(fuentes_client))
-o_server_files = $(patsubst %.$(extension),%.o,$(fuentes_server))
+o_common_files = $(patsubst common/%.$(extension),build/common_%.o,$(fuentes_common))
+o_client_files = $(patsubst client/%.$(extension),build/client_%.o,$(fuentes_client))
+o_server_files = $(patsubst server/%.$(extension),build/server_%.o,$(fuentes_server))
+
+build:
+	mkdir -p $@
+
+build/common_%.o: common/%.$(extension) | build
+	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
+
+build/client_%.o: client/%.$(extension) | build
+	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
+
+build/server_%.o: server/%.$(extension) | build
+	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
 
 client: $(o_common_files) $(o_client_files)
 	@if [ -z "$(o_client_files)" ]; \
@@ -147,7 +162,7 @@ client: $(o_common_files) $(o_client_files)
 		if [ -n "$(directorios)" ]; then echo "Directorios encontrados: $(directorios)"; fi; \
 		false; \
 	fi >&2
-	$(LD) $(o_common_files) $(o_client_files) -o client $(LDFLAGS)
+	$(LD) $(o_common_files) $(o_client_files) -o build/client $(LDFLAGS)
 
 server: $(o_common_files) $(o_server_files)
 	@if [ -z "$(o_server_files)" ]; \
@@ -156,8 +171,7 @@ server: $(o_common_files) $(o_server_files)
 		if [ -n "$(directorios)" ]; then echo "Directorios encontrados: $(directorios)"; fi; \
 		false; \
 	fi >&2
-	$(LD) $(o_common_files) $(o_server_files) -o server $(LDFLAGS)
+	$(LD) $(o_common_files) $(o_server_files) -o build/server $(LDFLAGS)
 
 clean:
-	$(RM) -f $(o_common_files) $(o_client_files) $(o_server_files) client server
-
+	$(RM) -f $(o_common_files) $(o_client_files) $(o_server_files) build/client build/server

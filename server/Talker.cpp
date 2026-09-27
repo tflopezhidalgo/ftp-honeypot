@@ -1,6 +1,6 @@
-#include "server_Talker.h"
-#include "server_Command.h"
-#include "server_CommandFactory.h"
+#include "../server/Talker.h"
+#include "../server/Command.h"
+#include "../server/CommandFactory.h"
 #include <iostream>
 #include <string>
 
