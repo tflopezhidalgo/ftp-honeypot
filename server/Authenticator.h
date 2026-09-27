@@ -1,8 +1,8 @@
 #ifndef LOGINFO_H
 #define LOGINFO_H
 
-#include "../server/server_ProtectedFS.h"
-#include "../server/server_ConfigLoader.h"
+#include "../server/ProtectedFS.h"
+#include "../server/ConfigLoader.h"
 #include <string>
 
 class Authenticator {

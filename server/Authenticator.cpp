@@ -1,4 +1,4 @@
-#include "../server/server_Authenticator.h"
+#include "../server/Authenticator.h"
 #include <string>
 #include <iostream>
 

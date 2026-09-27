@@ -1,6 +1,6 @@
-#include "../server/server_CommandFactory.h"
-#include "../server/server_Command.h"
-#include "../server/server_Commands.h"
+#include "../server/CommandFactory.h"
+#include "../server/Command.h"
+#include "../server/Commands.h"
 #include <sstream>
 #include <string>
 

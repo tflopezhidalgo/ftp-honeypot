@@ -139,20 +139,20 @@ endif
 
 all: client server
 
-o_common_files = $(patsubst common/common_%.$(extension),build/common_%.o,$(fuentes_common))
-o_client_files = $(patsubst client/client_%.$(extension),build/client_%.o,$(fuentes_client))
-o_server_files = $(patsubst server/server_%.$(extension),build/server_%.o,$(fuentes_server))
+o_common_files = $(patsubst common/%.$(extension),build/common_%.o,$(fuentes_common))
+o_client_files = $(patsubst client/%.$(extension),build/client_%.o,$(fuentes_client))
+o_server_files = $(patsubst server/%.$(extension),build/server_%.o,$(fuentes_server))
 
 build:
 	mkdir -p $@
 
-build/common_%.o: common/common_%.$(extension) | build
+build/common_%.o: common/%.$(extension) | build
 	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
 
-build/client_%.o: client/client_%.$(extension) | build
+build/client_%.o: client/%.$(extension) | build
 	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
 
-build/server_%.o: server/server_%.$(extension) | build
+build/server_%.o: server/%.$(extension) | build
 	$(COMPILE) $(COMPILE_FLAGS) -c $< -o $@
 
 client: $(o_common_files) $(o_client_files)

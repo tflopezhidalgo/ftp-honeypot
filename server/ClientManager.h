@@ -1,11 +1,11 @@
 #ifndef client_MANAGER_H
 #define client_MANAGER_H
 
-#include "../server/server_AcceptorSocket.h"
-#include "../server/server_ProtectedFS.h"
-#include "../server/server_ConfigLoader.h"
-#include "../server/server_Talker.h"
-#include "../server/server_Thread.h"
+#include "../server/AcceptorSocket.h"
+#include "../server/ProtectedFS.h"
+#include "../server/ConfigLoader.h"
+#include "../server/Talker.h"
+#include "../server/Thread.h"
 #include <string>
 #include <vector>
 
