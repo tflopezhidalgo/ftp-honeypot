@@ -5,6 +5,8 @@
 #include "server_CommandFactory.h"
 #include "server_Thread.h"
 
+// Conexion 1 a 1 con un cliente.
+
 class Talker : public Thread {
   private:
     bool dead;

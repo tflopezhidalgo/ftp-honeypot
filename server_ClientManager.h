@@ -17,6 +17,8 @@ class ClientManager : public Thread {
     ConfigLoader config;
     bool alive;
 
+    void dropStaleConnections();
+
   public:
     ClientManager(std::string service, std::string config);
     void run();
