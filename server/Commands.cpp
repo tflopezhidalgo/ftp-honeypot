@@ -35,19 +35,19 @@
 #define QUIT_SUCCESS_KEY "quitSuccess"
 
 std::string buildLoginRequiredMessage(ConfigLoader* r) {
-    return "530 " + r->get(CLIENT_NOT_LOGGED_KEY) + '\n';
+    return "530 " + r->get(CLIENT_NOT_LOGGED_KEY);
 }
 
 std::string buildUnknownCommandMessage(ConfigLoader* r) {
-    return "530 " + r->get(UNKNOWN_COMMAND_KEY) + '\n';
+    return "530 " + r->get(UNKNOWN_COMMAND_KEY);
 }
 
 std::string buildLoginSuccessMessage(ConfigLoader* r) {
-    return "230 " + r->get(LOGIN_SUCCESS_KEY) + '\n';
+    return "230 " + r->get(LOGIN_SUCCESS_KEY);
 }
 
 std::string buildLoginFailedMessage(ConfigLoader* r) {
-    return "530 " + r->get(LOGIN_FAILED_KEY) + '\n';
+    return "530 " + r->get(LOGIN_FAILED_KEY);
 }
 
 UserCommand::UserCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
@@ -57,7 +57,7 @@ UserCommand::UserCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
 }
 
 std::string UserCommand::execute() {
-    return ("331 " + this->config->get(PASS_REQUIRED_KEY) + '\n');
+    return ("331 " + this->config->get(PASS_REQUIRED_KEY));
 }
 
 UserCommand::~UserCommand() {}
@@ -86,7 +86,7 @@ std::string SystCommand::execute() {
     if (!authenticator->logged())
         return buildLoginRequiredMessage(this->config);
 
-    return "215 " + this->config->get(SYSTEM_INFO_KEY) + '\n';
+    return "215 " + this->config->get(SYSTEM_INFO_KEY);
 }
 
 SystCommand::~SystCommand() {}
@@ -108,7 +108,7 @@ std::string ListCommand::execute() {
     for (auto f : *files)
         msg = msg + "drwxrwxrwx 0 1000 1000 4096 Sep 24 12:34 " + f + '\n';
 
-    return msg + "226 " + this->config->get(LIST_END_KEY) + '\n';
+    return msg + "226 " + this->config->get(LIST_END_KEY);
 }
 
 ListCommand::~ListCommand() {}
@@ -123,7 +123,7 @@ std::string HelpCommand::execute() {
     if (!authenticator->logged())
         return buildLoginRequiredMessage(this->config);
 
-    return "214 " + this->config->get(COMMANDS_KEY) + '\n';
+    return "214 " + this->config->get(COMMANDS_KEY);
 }
 
 HelpCommand::~HelpCommand() {}
@@ -138,7 +138,7 @@ std::string PWDCommand::execute() {
     if (!authenticator->logged())
         return buildLoginRequiredMessage(this->config);
 
-    return "257 " + this->config->get(CURRENT_DIRECTORY_MSG_KEY) + '\n';
+    return "257 " + this->config->get(CURRENT_DIRECTORY_MSG_KEY);
 
 }
 
@@ -157,10 +157,10 @@ std::string MKDCommand::execute() {
         return buildLoginRequiredMessage(this->config);
 
     if (this->filesystem->make(this->dir))
-        return "550 " + this->config->get(MKD_FAILED_KEY) + '\n';
+        return "550 " + this->config->get(MKD_FAILED_KEY);
 
     return "257 \"" + this->dir + "\" " +
-           this->config->get(MKD_SUCCESS_KEY) + '\n';
+           this->config->get(MKD_SUCCESS_KEY);
 }
 
 MKDCommand::~MKDCommand() {}
@@ -178,10 +178,10 @@ std::string RMDCommand::execute() {
         return buildLoginRequiredMessage(this->config);
 
     if (this->filesystem->remove(this->dir))
-        return "550 " + this->config->get(RMD_FAILED_KEY) + '\n';
+        return "550 " + this->config->get(RMD_FAILED_KEY);
 
     return "250 \"" + this->dir + "\" " +
-           this->config->get(RMD_SUCCESS_KEY) + '\n';
+           this->config->get(RMD_SUCCESS_KEY);
 }
 
 RMDCommand::~RMDCommand() {}
@@ -206,7 +206,7 @@ QuitCommand::QuitCommand(ProtectedFS* f, ConfigLoader* r, Authenticator* l) {
 }
 
 std::string QuitCommand::execute() {
-    return "221 " + this->config->get(QUIT_SUCCESS_KEY) + '\n';
+    return "221 " + this->config->get(QUIT_SUCCESS_KEY);
 }
 
 QuitCommand::~QuitCommand() {}

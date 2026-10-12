@@ -11,8 +11,8 @@ class Socket {
   public:
     Socket(int open_fd);
     Socket(std::string host, std::string service);
-    int sendMsg(std::string msg);
-    int receiveMsg(std::string& msg);
+    int send(std::string msg);
+    int receive(std::string& msg);
     void kill();
     ~Socket();
 };
