@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define END_OF_MESSAGE '\n'
+
 // Ya me pasan el socket abierto (SocketManager)
 Socket::Socket(int open_fd) { this->fd = open_fd; }
 
@@ -34,13 +36,16 @@ Socket::Socket(std::string host, std::string service) {
     freeaddrinfo(r);
 }
 
-int Socket::sendMsg(std::string msg) {
+int Socket::send(std::string msg) {
     uint32_t total_sent = 0, sent = 0;
     char buf = 0;
     bool cont = true;
-    while (total_sent < msg.size() && cont) {
-        buf = msg[total_sent];
-        sent = send(fd, &buf, 1, MSG_NOSIGNAL);
+
+    std::string toSend = msg + END_OF_MESSAGE;
+
+    while (total_sent < toSend.size() && cont) {
+        buf = toSend[total_sent];
+        sent = ::send(fd, &buf, 1, MSG_NOSIGNAL);
         if (sent == 0)
             cont = false;
         total_sent += sent;
@@ -48,12 +53,12 @@ int Socket::sendMsg(std::string msg) {
     return total_sent;
 }
 
-int Socket::receiveMsg(std::string& msg) {
+int Socket::receive(std::string& msg) {
     char buf = 0;
     bool cont = true;
     uint32_t total_received = 0, received = 0;
-    while (buf != '\n' && cont) {
-        received = recv(this->fd, &buf, 1, 0);
+    while (buf != END_OF_MESSAGE && cont) {
+        received = ::recv(this->fd, &buf, 1, 0);
         msg += buf;
         total_received += received;
         if (received == 0)

@@ -5,7 +5,8 @@
 #include "../server/CommandFactory.h"
 #include "../server/Thread.h"
 
-// Conexion 1 a 1 con un cliente.
+// Representa una conexion con un cliente (1 a 1). Recibe y procesa
+// los comandos enviados hasta que finaliza la conexion.
 
 class Talker : public Thread {
   private:
@@ -13,10 +14,10 @@ class Talker : public Thread {
     Socket skt;
     CommandFactory factory;
     ProtectedFS* filesystem;
-    ConfigLoader* responses;
+    ConfigLoader* config;
 
   public:
-    Talker(int skt, ProtectedFS* filesystem, ConfigLoader* responses);
+    Talker(int skt, ProtectedFS* filesystem, ConfigLoader* config);
     void run();
     void stop();
     bool is_dead();

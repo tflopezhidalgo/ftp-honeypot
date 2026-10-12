@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     bool exit_set = false;
     std::string buffer;
 
-    skt.receiveMsg(buffer);
+    skt.receive(buffer);
     std::cout << buffer;
     buffer.clear();
 
@@ -23,15 +23,15 @@ int main(int argc, char* argv[]) {
             break;
         if (buffer == QUIT_MSG)
             exit_set = true;
-        if (skt.sendMsg(buffer + '\n') == 0)
+        if (skt.send(buffer) == 0)
             break;
         buffer.clear();
-        if (skt.receiveMsg(buffer) == 0)
+        if (skt.receive(buffer) == 0)
             break;
         if (buffer.find("150") != std::string::npos) {
             std::string buf2;
             while (buffer.find("226") == std::string::npos) {
-                skt.receiveMsg(buf2);
+                skt.receive(buf2);
                 buffer += buf2;
                 buf2.clear();
             }
